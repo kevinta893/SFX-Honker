@@ -54,13 +54,26 @@ public class DirectoryAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+
+        File selection = fileList[i];
         if(view == null){
             LayoutInflater li = LayoutInflater.from(context);
-            view = li.inflate(R.layout.file_item, null);
+
+            if(selection.isDirectory()){
+                //inflate a directory layout item
+                view = li.inflate(R.layout.folder_item, null);
+                TextView text = (TextView) view.findViewById(R.id.directory_title);
+                text.setText(fileList[i].getName());
+            }
+            else{
+                //inflate a file layout item
+                view = li.inflate(R.layout.file_item, null);
+                TextView text = (TextView) view.findViewById(R.id.file_title);
+                text.setText(fileList[i].getName());
+            }
         }
 
-        TextView text = (TextView) view.findViewById(R.id.directory_title);
-        text.setText(fileList[i].getName());
+
 
         return view;
     }

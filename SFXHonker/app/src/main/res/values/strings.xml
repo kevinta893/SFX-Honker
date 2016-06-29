@@ -3,6 +3,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="error_file_not_exist" translatable="true">Error! File does not exist</string>
+    <string name="error_cannot_playback" translatable="true">Error! Cannot playback file</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

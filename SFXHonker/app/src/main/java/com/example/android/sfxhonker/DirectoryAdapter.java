@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Directory adapter creates an adapter that allows users to browse through a directory
@@ -28,11 +30,45 @@ public class DirectoryAdapter extends BaseAdapter {
 
         final String state = Environment.getExternalStorageState();
         File[] files = new File(startPath).listFiles();
+
+        //sort the files
+        Arrays.sort(files, new FileSorter());
         this.fileList = files;
         if (Environment.MEDIA_MOUNTED.equals(state)) {
 
         }
         else {
+
+        }
+    }
+
+
+    /**
+     * Sorts by folder first, then files after
+     */
+    private class FileSorter implements Comparator<File> {
+
+        @Override
+        public int compare(File file, File t1) {
+
+            if(file.isDirectory()){
+                //is directory, sort by name
+                if (t1.isDirectory()){
+                    return file.compareTo(t1);
+                }
+                else{
+                    return -1;
+                }
+            }
+            else{
+                //is file, sort by name
+                if (t1.isDirectory() == false){
+                    return file.compareTo(t1);
+                }
+                else{
+                    return 1;
+                }
+            }
 
         }
     }

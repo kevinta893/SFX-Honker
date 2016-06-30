@@ -10,8 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Directory adapter creates an adapter that allows users to browse through a directory
@@ -23,14 +26,38 @@ public class DirectoryAdapter extends BaseAdapter {
     private File[] fileList;
     private String rootPath;
 
-    public DirectoryAdapter(Context c, String startPath){
+    private List<String> extensionFilter = new ArrayList<String>();
+
+    public DirectoryAdapter(Context c, String startPath, String[] fileFilter){
 
         this.context = c;
         this.rootPath = startPath;
 
-        final String state = Environment.getExternalStorageState();
-        File[] files = new File(startPath).listFiles();
+        this.extensionFilter = Arrays.asList(fileFilter);
 
+        FileFilter audioFileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+
+                if(file.isDirectory()){
+                    //directory, keep in list
+                    return true;
+                }
+
+
+                //file, keep if one of the accepted extensions
+                String extension = getFileExtension(file);
+                if (extensionFilter.indexOf(extension) >= 0){
+                    return true;
+                }
+
+                return false;
+            }
+
+        };
+
+        final String state = Environment.getExternalStorageState();
+        File[] files = new File(startPath).listFiles(audioFileFilter);
         //sort the files
         Arrays.sort(files, new FileSorter());
         this.fileList = files;
@@ -42,6 +69,21 @@ public class DirectoryAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * Gets the file extension for the given file.
+     * Returns empty string on no file extension, does not imply
+     * a file is a directory however.
+     * @param f
+     * @return "happy.mp3" returns "mp3"
+     */
+    public static String getFileExtension(File f){
+        String fileName = f.getPath();
+        int i = fileName.lastIndexOf('.');
+        if (i > 0) {
+            return fileName.substring(i+1);
+        }
+        return "";
+    }
 
     /**
      * Sorts by folder first, then files after

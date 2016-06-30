@@ -22,6 +22,16 @@ public class MainActivityFragment extends Fragment {
 
     private ListView fileList;
 
+    public static String[] audioFileExtensions = new String[]{
+            "3gp",
+            "m4a",
+            "aac",
+            "flac",
+            "mp3",
+            "ogg",
+            "mid",
+            "wav"
+    };
 
     public MainActivityFragment() {
     }
@@ -32,7 +42,7 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         fileList = (ListView) rootView.findViewById(R.id.sfx_items);
-        fileList.setAdapter(new DirectoryAdapter(getContext(), Environment.getExternalStorageDirectory().toString()));
+        fileList.setAdapter(new DirectoryAdapter(getContext(), Environment.getExternalStorageDirectory().toString(), audioFileExtensions));
         fileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

@@ -58,6 +58,7 @@ public class MainActivityFragment extends Fragment {
 
                 if (f.isDirectory()){
                     //directory, navigate to that directory
+                    fileList.setAdapter(new DirectoryAdapter(getContext(), f.getPath(), audioFileExtensions));
                 }
                 else{
                     //play the sound

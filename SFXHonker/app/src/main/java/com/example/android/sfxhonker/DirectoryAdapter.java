@@ -23,7 +23,7 @@ public class DirectoryAdapter extends BaseAdapter {
 
     private Context context;
 
-    private File[] fileList;
+    private List<File> fileList = new ArrayList<File>();
     private String rootPath;
 
     private List<String> extensionFilter = new ArrayList<String>();
@@ -58,11 +58,23 @@ public class DirectoryAdapter extends BaseAdapter {
 
         final String state = Environment.getExternalStorageState();
         File[] files = new File(startPath).listFiles(audioFileFilter);
-        //sort the files
-        Arrays.sort(files, new FileSorter());
-        this.fileList = files;
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
 
+        if(files != null){
+            //sort the files
+            Arrays.sort(files, new FileSorter());
+            this.fileList.addAll(Arrays.asList(files));
+        }
+
+
+        //inject the parent directory
+        String parentDirPath = new File(startPath).getParent();
+        if (parentDirPath != null){
+            //parent exists, add to list
+            this.fileList.add(0, new File(parentDirPath));          //parent directory
+        }
+
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            //TODO
         }
         else {
 
@@ -117,12 +129,12 @@ public class DirectoryAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return fileList.length;
+        return fileList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return fileList[i];
+        return fileList.get(i);
     }
 
     @Override
@@ -133,21 +145,27 @@ public class DirectoryAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        File selection = fileList[i];
+        File selection = fileList.get(i);
         if(view == null){
             LayoutInflater li = LayoutInflater.from(context);
 
-            if(selection.isDirectory()){
+            if (i == 0){
+                //first one is the root directory
+                view = li.inflate(R.layout.folder_item, null);
+                TextView text = (TextView) view.findViewById(R.id.directory_title);
+                text.setText("..");
+            }
+            else if(selection.isDirectory()){
                 //inflate a directory layout item
                 view = li.inflate(R.layout.folder_item, null);
                 TextView text = (TextView) view.findViewById(R.id.directory_title);
-                text.setText(fileList[i].getName());
+                text.setText(selection.getName());
             }
             else{
                 //inflate a file layout item
                 view = li.inflate(R.layout.file_item, null);
                 TextView text = (TextView) view.findViewById(R.id.file_title);
-                text.setText(fileList[i].getName());
+                text.setText(selection.getName());
             }
         }
 

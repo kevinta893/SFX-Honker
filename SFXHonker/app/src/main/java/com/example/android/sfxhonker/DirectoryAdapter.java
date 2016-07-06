@@ -25,6 +25,7 @@ public class DirectoryAdapter extends BaseAdapter {
 
     private List<File> fileList = new ArrayList<File>();
     private String rootPath;
+    private boolean showParentNode = true;
 
     private List<String> extensionFilter = new ArrayList<String>();
 
@@ -154,6 +155,9 @@ public class DirectoryAdapter extends BaseAdapter {
                 view = li.inflate(R.layout.folder_item, null);
                 TextView text = (TextView) view.findViewById(R.id.directory_title);
                 text.setText("..");
+                if (showParentNode == false){
+                    view.setVisibility(View.GONE);
+                }
             }
             else if(selection.isDirectory()){
                 //inflate a directory layout item
@@ -172,6 +176,14 @@ public class DirectoryAdapter extends BaseAdapter {
 
 
         return view;
+    }
+
+    public void setShowParentNode(boolean show){
+        this.showParentNode = show;
+    }
+
+    public String getRootPath(){
+        return rootPath;
     }
 
     public Context getContext(){

@@ -42,7 +42,9 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         fileList = (ListView) rootView.findViewById(R.id.sfx_items);
-        fileList.setAdapter(new DirectoryAdapter(getContext(), Environment.getExternalStorageDirectory().toString(), audioFileExtensions));
+        DirectoryAdapter dirAdapter = new DirectoryAdapter(getContext(), Environment.getExternalStorageDirectory().toString(), audioFileExtensions);
+        dirAdapter.setShowParentNode(false);
+        fileList.setAdapter(dirAdapter);
         fileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -58,7 +60,11 @@ public class MainActivityFragment extends Fragment {
 
                 if (f.isDirectory()){
                     //directory, navigate to that directory
-                    fileList.setAdapter(new DirectoryAdapter(getContext(), f.getPath(), audioFileExtensions));
+                    DirectoryAdapter navDirAdapter = new DirectoryAdapter(getContext(), f.getPath(), audioFileExtensions);
+                    if (navDirAdapter.getRootPath().equals(Environment.getExternalStorageDirectory().toString())){
+                        navDirAdapter.setShowParentNode(false);
+                    }
+                    fileList.setAdapter(navDirAdapter);
                 }
                 else{
                     //play the sound

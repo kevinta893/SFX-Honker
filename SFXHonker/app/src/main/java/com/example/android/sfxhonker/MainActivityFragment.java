@@ -20,6 +20,8 @@ import java.io.IOException;
  */
 public class MainActivityFragment extends Fragment {
 
+    public static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+
     private ListView fileList;
 
     public static String[] audioFileExtensions = new String[]{
@@ -72,6 +74,7 @@ public class MainActivityFragment extends Fragment {
                 }
             }
         });
+        Log.v(LOG_TAG, "Starting UI in source folder: " + dirAdapter.getRootPath());
 
         return rootView;
     }

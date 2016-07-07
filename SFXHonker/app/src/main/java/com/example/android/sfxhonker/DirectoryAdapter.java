@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -156,7 +157,11 @@ public class DirectoryAdapter extends BaseAdapter {
                 TextView text = (TextView) view.findViewById(R.id.directory_title);
                 text.setText("..");
                 if (showParentNode == false){
+                    ImageView icon = (ImageView) view.findViewById(R.id.directory_icon);
                     view.setVisibility(View.GONE);
+                    icon.setVisibility(View.GONE);
+                    text.setVisibility(View.GONE);
+                    text.setHeight(0);
                 }
             }
             else if(selection.isDirectory()){
